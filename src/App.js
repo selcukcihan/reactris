@@ -1,26 +1,90 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from "react";
+
+import Board from "./game/Board";
+import { WIDTH, HEIGHT } from './game/Constants';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+    state = {
+        board: new Board(),
+    }
+
+    componentDidMount() {
+        setInterval(() => {
+            this.setState(prevState => {
+                let board = Object.assign({}, prevState.board);
+                let explosion = board.moveDown();
+                if (explosion) {
+                    ;
+                }
+                return { board };
+            })
+        }, 1000);
+    }
+
+    handleKeyPress = (event) => {
+        let action = null;
+        switch (event.keyCode) {
+            case 32:
+                action = (board) => board.rotate();
+                break;
+            case 37:
+                action = (board) => board.moveLeft();
+                break;
+            case 39:
+                action = (board) => board.moveRight();
+                break;
+            default:
+                break;
+        }
+        if (action) {
+            this.setState(prevState => {
+                let board = Object.assign({}, prevState.board);
+                action(board);
+                return { board };
+            });
+        }
+    }
+
+    componentWillMount() {
+        document.addEventListener("keydown", this.handleKeyPress.bind(this));
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyPress.bind(this));
+    }   
+
+    getDivs = () => {
+        let divs = [];
+        for (let y = 0; y < HEIGHT; y++) {
+            for (let x = 0; x < WIDTH; x++) {
+                let className = "tile ";
+                if (this.state.board.isOccupied(x, y)) {
+                    className += "occupied";
+                } else {
+                    className += "empty";
+                }
+                divs.push(
+                    <div key={x + "," + y} className={className}></div>
+                );
+            }
+        }
+        return divs;
+    }
+    render() {
+        return (
+            <div className="full-height">
+                <div style={{backgroundColor: "orange"}}
+                     className="game-height game-width center grid-container margin-auto">
+                     {this.getDivs()}
+                </div>
+                <div className="game-width control-height margin-auto " style={{backgroundColor: "black"}}>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;

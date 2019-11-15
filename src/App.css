@@ -1,22 +1,48 @@
-.App {
-  text-align: center;
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background-color: #ADD8E6;
 }
 
-.App-logo {
-  height: 40vmin;
+.full-height {
+    height: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.margin-auto {
+    margin: 0 auto;
 }
 
-.App-link {
-  color: #09d3ac;
+.game-height {
+    height: 60vh;
+}
+
+.control-height {
+    height: 20vh;
+}
+
+.game-width {
+    width: 30vh;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+}
+
+.tile {
+    width: 3vh;
+    height: 3vh;
+}
+
+.tile.occupied {
+    background-color: green;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 1px solid #DDDDDD;
+}
+
+.tile.empty {
+    background-color: white;
 }
