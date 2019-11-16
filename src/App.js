@@ -11,18 +11,30 @@ class App extends Component {
         board: new Board(),
     }
 
+    intervalId = null;
+
     componentDidMount() {
-        setInterval(() => {
+        this.intervalId = setInterval(() => {
             this.setState(prevState => {
                 let board = Object.assign({}, prevState.board);
-                let explosion = board.moveDown();
-                if (explosion) {
-                    ;
+                if (!this.checkGameOver(board)) {
+                    let explosion = board.moveDown();
+                    if (explosion) {
+                        ;
+                    }
                 }
                 return { board };
             })
         }, 1000);
     }
+
+    checkGameOver = (board) => {
+        if (board.gameOver()) {
+            clearInterval(this.intervalId);
+            return true;
+        }
+        return false;
+    };
 
     handleKeyPress = (event) => {
         let action = null;
@@ -45,11 +57,13 @@ class App extends Component {
         if (action) {
             this.setState(prevState => {
                 let board = Object.assign({}, prevState.board);
-                action(board);
+                if (!this.checkGameOver(board)) {
+                    action(board);
+                }
                 return { board };
             });
         }
-    }
+    };
 
     componentWillMount() {
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
@@ -75,19 +89,56 @@ class App extends Component {
             }
         }
         return divs;
-    }
+    };
+
     render() {
         return (
             <div className="full-height">
-                <div style={{backgroundColor: "orange"}}
-                     className="game-height game-width center grid-container margin-auto">
+                <div className="game-height game-width grid-container margin-auto">
                      {this.getDivs()}
                 </div>
-                <div className="game-width control-height margin-auto " style={{backgroundColor: "black"}}>
-                </div>
+                {this.renderControlArea()}
             </div>
         );
     }
+
+    renderControlArea = () => {
+        if (this.state.board.gameOver()) {
+            return (
+                <div className="game-width control-height margin-auto secondary-color center-text">
+                    {"Game Over! Your final score is " + this.state.board.getScore()}
+                </div>
+            );            
+        } else {
+            return (
+                <div className="game-width control-height margin-auto secondary-color">
+                    {"Score: " + this.state.board.getScore()}
+                    <div className="preview-grid-container margin-auto control-height center-text">
+                        {this.getDivsForPreview()}
+                    </div>
+                </div>
+            );               
+        }
+    };
+
+    getDivsForPreview = () => {
+        let divs = [];
+        let tiles = this.state.board.getNextShape().peek();
+        for (let y = 0; y < tiles.length; y++) {
+            for (let x = 0; x < tiles[y].length; x++) {
+                let className = "tile preview ";
+                if (tiles[y][x]) {
+                    className += "occupied";
+                } else {
+                    className += "empty";
+                }
+                divs.push(
+                    <div key={x + "," + y} className={className}></div>
+                );
+            }
+        }
+        return divs;
+    };
 }
 
 export default App;

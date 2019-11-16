@@ -14,6 +14,9 @@ class Board {
                 Array(WIDTH).fill(0));
 
         this.current = null;
+        this.nextShape = Shape.random();
+        this.score = 0;
+        this.finished = false;
     }
 
     isOccupied = (x, y) => {
@@ -95,13 +98,26 @@ class Board {
                         y--;
                     }
                 }
-                this.current = Shape.random();
+                this.newShape();
             }
         } else {
-            this.current = Shape.random();
+            this.newShape();
         }
 
         return null; // TODO patlamayı hallet
+    };
+
+    newShape = () => {
+        this.current = this.nextShape;
+        this.nextShape = Shape.random();
+        let { isolatedBoard, changed } = this.current.move(0,  0);
+        if (this.checkCollision(isolatedBoard, changed)) {
+            this.finished = true; 
+        }
+    };
+
+    gameOver = () => {
+        return this.finished;
     };
 
     checkCollision = (isolatedBoard, changed) => {
@@ -127,6 +143,7 @@ class Board {
             this.board[_y] = this.board[_y - 1];
         }
         this.board[0] = Array(WIDTH).fill(0);
+        this.score++;
     };
 
     checkLineCollapse = (y) => {
@@ -136,6 +153,14 @@ class Board {
             }
         }
         return true;
+    };
+
+    getScore = () => {
+        return this.score;
+    }
+
+    getNextShape = () => {
+        return this.nextShape;
     };
 }
 

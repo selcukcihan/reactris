@@ -71,6 +71,21 @@ class Shape {
         return isolatedBoard;
     }
 
+    peek = () => {
+        //return this.orientations[0];
+        let isolatedBoard = Array(4)
+            .fill()
+            .map(() =>
+                Array(4).fill(0));
+        for (let _y = 0; _y < this.orientations[0].length; _y++) {
+            for (let _x = 0; _x < this.orientations[0][_y].length; _x++) {
+                let box = this.orientations[0];
+                isolatedBoard[_y][_x] = box[_y][_x];
+            }
+        }
+        return isolatedBoard;
+    }
+
     checkBounds = () => {
         for (let _y = 0; _y < this.orientations[this.orientationIndex].length; _y++) {
             for (let _x = 0; _x < this.orientations[this.orientationIndex][_y].length; _x++) {

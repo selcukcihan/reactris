@@ -40,9 +40,42 @@ html, body, #root {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    border: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    border-bottom: 1px solid #DDDDDD;
 }
 
 .tile.empty {
     background-color: white;
+}
+
+.secondary-color {
+    background-color: black;
+    color: orange;
+}
+
+.control-height.center-text {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20vh;
+    font-weight: 700;
+}
+
+
+.preview-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 12vh;
+    height: 12vh;
+}
+
+.preview.occupied {
+    background-color: green;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 0px solid #DDDDDD;
+}
+
+.preview.empty {
+    background-color: black;
 }
