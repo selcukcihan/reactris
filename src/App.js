@@ -36,6 +36,9 @@ class App extends Component {
             case 39:
                 action = (board) => board.moveRight();
                 break;
+            case 40:
+                action = (board) => board.moveDown();
+                break;
             default:
                 break;
         }
