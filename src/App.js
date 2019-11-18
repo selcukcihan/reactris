@@ -34,6 +34,8 @@ class App extends Component {
                 return { board };
             })
         }, TICK_INTERVAL_SECONDS * 1000);
+
+        document.addEventListener("keydown", this.handleKeyPress);
     }
 
     checkGameOver = (board) => {
@@ -104,17 +106,13 @@ class App extends Component {
         }
     };
 
-    componentWillMount() {
-        document.addEventListener("keydown", this.handleKeyPress);
-    }
-
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyPress);
 
         if (this.intervalId) {
             clearInterval(this.intervalId);
         }
-    }   
+    }
 
     getDivs = () => {
         let divs = [];
@@ -157,7 +155,7 @@ class App extends Component {
                     </div>
                 </div>
                 {this.renderControlArea()}
-                <a className="center-link" target="_blank"
+                <a className="center-link" target="_blank" rel="noopener noreferrer"
                    href="https://github.com/selcukcihan/selcukcihan.github.io">source code</a>
             </div>
         );
