@@ -55,18 +55,17 @@ class Shape {
         let isolatedBoard = Array(HEIGHT)
             .fill()
             .map(() =>
-                Array(WIDTH).fill(0));
+                Array(WIDTH).fill(null));
         for (let _y = 0; _y < this.orientations[this.orientationIndex].length; _y++) {
             for (let _x = 0; _x < this.orientations[this.orientationIndex][_y].length; _x++) {
                 let box = this.orientations[this.orientationIndex];
                 if (this.y + _y >= 0 && this.y + _y < HEIGHT
                         && this.x + _x >= 0 && this.x + _x < WIDTH) {
-                    isolatedBoard[this.y + _y][this.x + _x] = box[_y][_x];
+                    if (box[_y][_x] === 1) {
+                        isolatedBoard[this.y + _y][this.x + _x] = this;
+                    }
                 }
             }
-        }
-        if (!isolatedBoard) {
-            console.log("FSAFS");
         }
         return isolatedBoard;
     }
@@ -76,11 +75,12 @@ class Shape {
         let isolatedBoard = Array(4)
             .fill()
             .map(() =>
-                Array(4).fill(0));
+                Array(4).fill(null));
         for (let _y = 0; _y < this.orientations[0].length; _y++) {
             for (let _x = 0; _x < this.orientations[0][_y].length; _x++) {
-                let box = this.orientations[0];
-                isolatedBoard[_y][_x] = box[_y][_x];
+                if (this.orientations[0][_y][_x]) {
+                    isolatedBoard[_y][_x] = this;
+                }
             }
         }
         return isolatedBoard;
@@ -100,6 +100,10 @@ class Shape {
         return true;
     }
 
+    getCSSClassName = () => {
+        return this.cssClassName;
+    }
+
     static random() {
         const shapes = [LineShape, SquareShape, TShape, SShape, ZShape, JShape, LShape];
         const rnd = Math.floor(Math.random() * shapes.length);
@@ -110,6 +114,7 @@ class Shape {
 class LineShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "line-shape";
         this.x = 3;
         this.orientations = [
             [
@@ -131,6 +136,7 @@ class LineShape extends Shape {
 class SquareShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "square-shape";
         this.x = 4;
         this.orientations = [
             [
@@ -144,6 +150,7 @@ class SquareShape extends Shape {
 class TShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "t-shape";
         this.x = 3;
         this.orientations = [
             [
@@ -173,6 +180,7 @@ class TShape extends Shape {
 class SShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "s-shape";
         this.x = 3;
         this.orientations = [
             [
@@ -192,6 +200,7 @@ class SShape extends Shape {
 class ZShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "z-shape";
         this.x = 3;
         this.orientations = [
             [
@@ -211,6 +220,7 @@ class ZShape extends Shape {
 class JShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "j-shape";
         this.x = 3;
         this.orientations = [
             [
@@ -240,6 +250,7 @@ class JShape extends Shape {
 class LShape extends Shape {
     constructor() {
         super();
+        this.cssClassName = "l-shape";
         this.x = 3;
         this.orientations = [
             [

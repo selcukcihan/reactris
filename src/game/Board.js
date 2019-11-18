@@ -11,7 +11,7 @@ class Board {
         this.board = Array(HEIGHT)
             .fill()
             .map(() =>
-                Array(WIDTH).fill(0));
+                Array(WIDTH).fill(null));
 
         this.current = null;
         this.nextShape = Shape.random();
@@ -19,12 +19,17 @@ class Board {
         this.finished = false;
     }
 
-    isOccupied = (x, y) => {
+    getCSSClassName = (x, y) => {
         let isolatedBoard = null;
         if (this.current) {
             isolatedBoard = this.current.getIsolatedBoard();
         }
-        return this.board[y][x] === 1 || (isolatedBoard && isolatedBoard[y][x] === 1);
+        let mergedBoard = (this.board[y][x] || (isolatedBoard && isolatedBoard[y][x]));
+        if (mergedBoard) {
+            return "occupied " + mergedBoard.getCSSClassName(x, y);
+        } else {
+            return "empty";
+        }
     };
 
     hasCollision = (isolatedBoard) => {
@@ -84,8 +89,8 @@ class Board {
                 // nihai yerini aldigi icin, simdi board'u guncelleyelim
                 for (let _y = 0; _y < HEIGHT; _y++) {
                     for (let _x = 0; _x < WIDTH; _x++) {
-                        if (isolatedBoard[_y][_x] !== 0) {
-                            this.board[_y][_x] = 1;
+                        if (isolatedBoard[_y][_x]) {
+                            this.board[_y][_x] = this.current;
                         }
                     }
                 }
@@ -123,14 +128,14 @@ class Board {
     checkCollision = (isolatedBoard, changed) => {
         if (!changed) {
             for (let _x = 0; _x < isolatedBoard[HEIGHT - 1].length; _x++) {
-                if (isolatedBoard[HEIGHT - 1][_x] === 1) {
+                if (isolatedBoard[HEIGHT - 1][_x]) {
                     return true;
                 }
             }
         }
         for (let _y = 0; _y < isolatedBoard.length; _y++) {
             for (let _x = 0; _x < isolatedBoard[_y].length; _x++) {
-                if (this.board[_y][_x] === 1 && isolatedBoard[_y][_x] === 1) {
+                if (this.board[_y][_x] && isolatedBoard[_y][_x]) {
                     return true;
                 }
             }
@@ -142,13 +147,13 @@ class Board {
         for (let _y = y; _y > 0; _y--) {
             this.board[_y] = this.board[_y - 1];
         }
-        this.board[0] = Array(WIDTH).fill(0);
+        this.board[0] = Array(WIDTH).fill(null);
         this.score++;
     };
 
     checkLineCollapse = (y) => {
         for (let x = 0; x < WIDTH; x++) {
-            if (this.board[y][x] === 0) {
+            if (!this.board[y][x]) {
                 return false;
             }
         }

@@ -40,8 +40,35 @@ html, body, #root {
     height: 3vh;
 }
 
+.l-shape {
+    background-color: #7cb342
+}
+
+.square-shape {
+    background-color: #c67c00
+}
+
+.s-shape {
+    background-color: #725b53
+}
+
+.z-shape {
+    background-color: #a1887f
+}
+
+.t-shape {
+    background-color: #ffa040
+}
+
+.line-shape {
+    background-color: #c7a500
+}
+
+.j-shape {
+    background-color: #4b830d
+}
+
 .tile.occupied {
-    background-color: green;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -86,20 +113,24 @@ html, body, #root {
 .preview-grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    width: 12vh;
-    height: 12vh;
+    width: 6vh;
+    height: 6vh;
     padding-top: 1vh;
 }
 
-.preview.occupied {
-    background-color: green;
+.preview-tile {
+    width: 1.5vh;
+    height: 1.5vh;
+}
+
+.preview-tile.occupied {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     border: 0px solid #DDDDDD;
 }
 
-.preview.empty {
+.preview-tile.empty {
     background-color: black;
 }
 

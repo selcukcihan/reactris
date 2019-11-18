@@ -21,22 +21,64 @@ class App extends Component {
     handleTouchRight = (event) => this.handleTouchEnd(event, "right");
     handleTouchControl = (event) => this.handleTouchEnd(event, "down");
 
-    componentDidMount() {
-        this.intervalId = setInterval(() => {
-            this.setState(prevState => {
-                let board = Object.assign({}, prevState.board);
-                if (!this.checkGameOver(board)) {
-                    let explosion = board.moveDown();
-                    if (explosion) {
-                        ;
-                    }
-                }
-                return { board };
-            })
-        }, TICK_INTERVAL_SECONDS * 1000);
+    hidden = null;
+    visibilityChange = null;
 
+    componentDidMount() {
         document.addEventListener("keydown", this.handleKeyPress);
+
+        this.initVisibilityChange();
+        document.addEventListener(this.visibilityChange, this.handleVisibilityChange, false);
+
+        this.resumeGame();
     }
+
+    pauseGame = () => {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = null;
+        }        
+    };
+
+    resumeGame = () => {
+        if (!this.intervalId) {
+            this.intervalId = setInterval(() => {
+                this.setState(prevState => {
+                    let board = Object.assign({}, prevState.board);
+                    if (!this.checkGameOver(board)) {
+                        let explosion = board.moveDown();
+                        if (explosion) {
+                            ;
+                        }
+                    }
+                    return { board };
+                })
+            }, TICK_INTERVAL_SECONDS * 1000);
+        }
+    };
+
+    initVisibilityChange = () => {
+        // FROM https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
+        // Set the name of the hidden property and the change event for visibility
+        if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support 
+            this.hidden = "hidden";
+            this.visibilityChange = "visibilitychange";
+        } else if (typeof document.msHidden !== "undefined") {
+            this.hidden = "msHidden";
+            this.visibilityChange = "msvisibilitychange";
+        } else if (typeof document.webkitHidden !== "undefined") {
+            this.hidden = "webkitHidden";
+            this.visibilityChange = "webkitvisibilitychange";
+        }
+    };
+
+    handleVisibilityChange = () => {
+        if (document[this.hidden]) {
+            this.pauseGame();
+        } else {
+            this.resumeGame();
+        }
+    };
 
     checkGameOver = (board) => {
         if (board.gameOver()) {
@@ -108,10 +150,7 @@ class App extends Component {
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyPress);
-
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-        }
+        this.pauseGame();
     }
 
     getDivs = () => {
@@ -119,11 +158,7 @@ class App extends Component {
         for (let y = 0; y < HEIGHT; y++) {
             for (let x = 0; x < WIDTH; x++) {
                 let className = "tile ";
-                if (this.state.board.isOccupied(x, y)) {
-                    className += "occupied";
-                } else {
-                    className += "empty";
-                }
+                className += this.state.board.getCSSClassName(x, y);
                 divs.push(
                     <div key={x + "," + y} className={className}></div>
                 );
@@ -173,7 +208,6 @@ class App extends Component {
                 <div className="game-width control-height margin-auto secondary-color digital"
                      onTouchEnd={this.handleTouchControl}>
                     <div className="preview-grid-container margin-auto control-height center-text">
-                        
                         {this.getDivsForPreview()}
                     </div>
                     <div className="margin-auto control-height center-text">
@@ -189,9 +223,9 @@ class App extends Component {
         let tiles = this.state.board.getNextShape().peek();
         for (let y = 0; y < tiles.length; y++) {
             for (let x = 0; x < tiles[y].length; x++) {
-                let className = "tile preview ";
+                let className = "preview-tile ";
                 if (tiles[y][x]) {
-                    className += "occupied";
+                    className += "occupied " + tiles[y][x].getCSSClassName();
                 } else {
                     className += "empty";
                 }
