@@ -25,9 +25,14 @@ html, body, #root {
     width: 30vh;
 }
 
-.grid-container {
+.game-grid-container {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
+}
+
+.main-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 30vh 1fr;
 }
 
 .tile {
@@ -56,7 +61,7 @@ html, body, #root {
 .control-height.center-text {
     text-align: center;
     vertical-align: middle;
-    line-height: 20vh;
+    line-height: 10vh;
     font-weight: 700;
 }
 

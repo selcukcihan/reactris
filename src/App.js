@@ -9,9 +9,14 @@ import './App.css';
 class App extends Component {
     state = {
         board: new Board(),
-    }
+    };
 
     intervalId = null;
+
+    handleTouchMain = (event) => this.handleTouchEnd(event, "rotate");
+    handleTouchLeft = (event) => this.handleTouchEnd(event, "left");
+    handleTouchRight = (event) => this.handleTouchEnd(event, "right");
+    handleTouchControl = (event) => this.handleTouchEnd(event, "down");
 
     componentDidMount() {
         this.intervalId = setInterval(() => {
@@ -65,12 +70,43 @@ class App extends Component {
         }
     };
 
+    handleTouchEnd = (event, command) => {
+        event.preventDefault();
+
+        let action = null;
+        switch (command) {
+            case "rotate":
+                action = (board) => board.rotate();
+                break;
+            case "left":
+                action = (board) => board.moveLeft();
+                break;
+            case "right":
+                action = (board) => board.moveRight();
+                break;
+            case "down":
+                action = (board) => board.moveDown();
+                break;
+            default:
+                break;
+        }
+        if (action) {
+            this.setState(prevState => {
+                let board = Object.assign({}, prevState.board);
+                if (!this.checkGameOver(board)) {
+                    action(board);
+                }
+                return { board };
+            });
+        }
+    };
+
     componentWillMount() {
-        document.addEventListener("keydown", this.handleKeyPress.bind(this));
+        document.addEventListener("keydown", this.handleKeyPress);
     }
 
     componentWillUnmount() {
-        document.removeEventListener("keydown", this.handleKeyPress.bind(this));
+        document.removeEventListener("keydown", this.handleKeyPress);
     }   
 
     getDivs = () => {
@@ -94,8 +130,14 @@ class App extends Component {
     render() {
         return (
             <div className="full-height">
-                <div className="game-height game-width grid-container margin-auto">
-                     {this.getDivs()}
+                <div className="game-height main-grid-container">
+                    <div onTouchEnd={this.handleTouchLeft}>
+                    </div>
+                    <div className="game-grid-container" onTouchEnd={this.handleTouchMain}>
+                        {this.getDivs()}
+                    </div>
+                    <div onTouchEnd={this.handleTouchRight}>
+                    </div>
                 </div>
                 {this.renderControlArea()}
             </div>
@@ -106,12 +148,15 @@ class App extends Component {
         if (this.state.board.gameOver()) {
             return (
                 <div className="game-width control-height margin-auto secondary-color center-text">
-                    {"Game Over! Your final score is " + this.state.board.getScore()}
+                    Game Over!
+                    <br/>
+                    {"Your final score is " + this.state.board.getScore()}
                 </div>
             );            
         } else {
             return (
-                <div className="game-width control-height margin-auto secondary-color">
+                <div className="game-width control-height margin-auto secondary-color"
+                     ontouchend={this.handleTouchControl}>
                     {"Score: " + this.state.board.getScore()}
                     <div className="preview-grid-container margin-auto control-height center-text">
                         {this.getDivsForPreview()}
