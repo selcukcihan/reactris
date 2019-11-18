@@ -93,6 +93,7 @@ class App extends Component {
         let action = null;
         switch (event.keyCode) {
             case 32:
+            case 38:
                 action = (board) => board.rotate();
                 break;
             case 37:
