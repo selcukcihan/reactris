@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "konva": "^4.0.17",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-konva": "^16.10.1-0",
+    "react-icons": "^3.8.0",
+    "react-responsive": "^8.0.1",
     "react-scripts": "3.2.0"
   },
   "scripts": {

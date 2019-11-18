@@ -3,8 +3,8 @@ import Shape from './Shape';
 
 
 class Board {
-    // Board'un en ust sol kutucugu (x, y) = (0, 0) koordinati.
-    //          en alt sag kutucugu (x, y) = (WIDTH - 1, HEIGHT - 1) koordinati.
+    // Board'un en ust sol kutucugunun koordinati (x, y) = (0, 0)
+    //          en alt sag kutucugunun koordinati (x, y) = (WIDTH - 1, HEIGHT - 1)
 
     constructor(updateCallback) {
         this.updateCallback = updateCallback;
@@ -44,7 +44,7 @@ class Board {
         }
         let { isolatedBoard, } = this.current.rotate(true);
         if (this.hasCollision(isolatedBoard)) {
-            this.current.rotate(false); // undo the move
+            this.current.rotate(false); // geri al cunku hamle gecerli degil
         }      
     };
 
@@ -54,7 +54,7 @@ class Board {
         }
         const { isolatedBoard, } = this.current.move(1, 0);
         if (this.hasCollision(isolatedBoard)) {
-            this.current.move(-1, 0); // undo the move
+            this.current.move(-1, 0); // geri al cunku hamle gecerli degil
         }
     };
 
@@ -64,7 +64,7 @@ class Board {
         }
         const { isolatedBoard, } = this.current.move(-1, 0);
         if (this.hasCollision(isolatedBoard)) {
-            this.current.move(1, 0); // undo the move
+            this.current.move(1, 0); // geri al cunku hamle gecerli degil
         }
     };
 
@@ -104,7 +104,7 @@ class Board {
             this.newShape();
         }
 
-        return null; // TODO patlamayı hallet
+        return null; // TODO animasyonlu patlama icin burada patlayan bolumu return etmek gerekecek
     };
 
     newShape = () => {
@@ -156,7 +156,7 @@ class Board {
     };
 
     getScore = () => {
-        return this.score;
+        return ("000" + this.score).slice(-3);
     }
 
     getNextShape = () => {

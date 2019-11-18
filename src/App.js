@@ -1,7 +1,10 @@
 import React, { Component } from "react";
+import { useMediaQuery } from 'react-responsive';
+
+import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 
 import Board from "./game/Board";
-import { WIDTH, HEIGHT } from './game/Constants';
+import { TICK_INTERVAL_SECONDS, WIDTH, HEIGHT } from './game/Constants';
 
 import './App.css';
 
@@ -30,7 +33,7 @@ class App extends Component {
                 }
                 return { board };
             })
-        }, 1000);
+        }, TICK_INTERVAL_SECONDS * 1000);
     }
 
     checkGameOver = (board) => {
@@ -107,6 +110,10 @@ class App extends Component {
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyPress);
+        
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+        }
     }   
 
     getDivs = () => {
@@ -128,15 +135,25 @@ class App extends Component {
     };
 
     render() {
+        const Mobile = ({ children }) => {
+            const isMobile = useMediaQuery({ maxWidth: "1224px" });
+            return isMobile ? children : null;
+        };
         return (
             <div className="full-height">
                 <div className="game-height main-grid-container">
-                    <div onTouchEnd={this.handleTouchLeft}>
+                    <div className="center-control-container" onTouchEnd={this.handleTouchLeft}>
+                        <Mobile>
+                            <FaCaretLeft className="center-control"/>
+                        </Mobile>
                     </div>
                     <div className="game-grid-container" onTouchEnd={this.handleTouchMain}>
                         {this.getDivs()}
                     </div>
-                    <div onTouchEnd={this.handleTouchRight}>
+                    <div className="center-control-container" onTouchEnd={this.handleTouchRight}>
+                        <Mobile>
+                            <FaCaretRight className="center-control"/>
+                        </Mobile>
                     </div>
                 </div>
                 {this.renderControlArea()}
@@ -147,19 +164,20 @@ class App extends Component {
     renderControlArea = () => {
         if (this.state.board.gameOver()) {
             return (
-                <div className="game-width control-height margin-auto secondary-color center-text">
-                    Game Over!
-                    <br/>
-                    {"Your final score is " + this.state.board.getScore()}
+                <div className="game-width control-height margin-auto secondary-color center-text digital">
+                    {"Your score is " + this.state.board.getScore()}
                 </div>
             );            
         } else {
             return (
-                <div className="game-width control-height margin-auto secondary-color"
-                     ontouchend={this.handleTouchControl}>
-                    {"Score: " + this.state.board.getScore()}
+                <div className="game-width control-height margin-auto secondary-color digital"
+                     onTouchEnd={this.handleTouchControl}>
                     <div className="preview-grid-container margin-auto control-height center-text">
+                        
                         {this.getDivsForPreview()}
+                    </div>
+                    <div className="margin-auto control-height center-text">
+                        {this.state.board.getScore()}
                     </div>
                 </div>
             );               

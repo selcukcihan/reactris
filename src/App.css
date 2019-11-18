@@ -65,12 +65,24 @@ html, body, #root {
     font-weight: 700;
 }
 
+.center-control {
+    margin: 0 auto;
+    display: block;
+    font-size: 10vh;
+}
+
+.center-control-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
 
 .preview-grid-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     width: 12vh;
     height: 12vh;
+    padding-top: 1vh;
 }
 
 .preview.occupied {
@@ -84,3 +96,9 @@ html, body, #root {
 .preview.empty {
     background-color: black;
 }
+
+.digital {
+    font-family: 'Orbitron', sans-serif;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
