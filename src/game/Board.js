@@ -1,4 +1,4 @@
-import { WIDTH, HEIGHT } from './Constants';
+import { TICK_INTERVAL_SECONDS, WIDTH, HEIGHT } from './Constants';
 import Shape from './Shape';
 
 
@@ -17,7 +17,12 @@ class Board {
         this.nextShape = Shape.random();
         this.score = 0;
         this.finished = false;
+        this.level = 0;
     }
+
+    getIntervalSeconds = () => {
+        return TICK_INTERVAL_SECONDS / Math.pow(1.2, this.level);
+    };
 
     getCSSClassName = (x, y) => {
         let isolatedBoard = null;
@@ -74,6 +79,7 @@ class Board {
     };
 
     moveDown = () => {
+        let collapsed = false;
         if (this.current) {
             // once asagi kaydir
             var { isolatedBoard, changed } = this.current.move(0,  1);
@@ -99,6 +105,7 @@ class Board {
                 for (let y = HEIGHT - 1; y >= 0;) {
                     if (this.checkLineCollapse(y)) {
                         this.collapseLine(y);
+                        collapsed = true;
                     } else {
                         y--;
                     }
@@ -109,7 +116,7 @@ class Board {
             this.newShape();
         }
 
-        return null; // TODO animasyonlu patlama icin burada patlayan bolumu return etmek gerekecek
+        return collapsed; // TODO animasyonlu patlama icin burada patlayan bolumu return etmek gerekecek
     };
 
     newShape = () => {
@@ -148,7 +155,11 @@ class Board {
             this.board[_y] = this.board[_y - 1];
         }
         this.board[0] = Array(WIDTH).fill(null);
+
         this.score++;
+        if (this.score % 10 === 0) {
+            this.level++;
+        }
     };
 
     checkLineCollapse = (y) => {
@@ -162,7 +173,11 @@ class Board {
 
     getScore = () => {
         return ("000" + this.score).slice(-3);
-    }
+    };
+
+    getLevel = () => {
+        return this.level + 1;
+    };
 
     getNextShape = () => {
         return this.nextShape;

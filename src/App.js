@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import { FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 
 import Board from "./game/Board";
-import { TICK_INTERVAL_SECONDS, WIDTH, HEIGHT } from './game/Constants';
+import { WIDTH, HEIGHT } from './game/Constants';
 
 import './App.css';
 
@@ -23,6 +23,7 @@ class App extends Component {
 
     hidden = null;
     visibilityChange = null;
+    paused = false;
 
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyPress);
@@ -30,31 +31,31 @@ class App extends Component {
         this.initVisibilityChange();
         document.addEventListener(this.visibilityChange, this.handleVisibilityChange, false);
 
+        this.processTick();
         this.resumeGame();
     }
 
     pauseGame = () => {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-        }        
+        this.paused = true;     
     };
 
-    resumeGame = () => {
-        if (!this.intervalId) {
-            this.intervalId = setInterval(() => {
-                this.setState(prevState => {
-                    let board = Object.assign({}, prevState.board);
-                    if (!this.checkGameOver(board)) {
-                        let explosion = board.moveDown();
-                        if (explosion) {
-                            ;
-                        }
-                    }
-                    return { board };
-                })
-            }, TICK_INTERVAL_SECONDS * 1000);
+    processTick = () => {
+        if (!this.paused) {
+            this.setState(prevState => {
+                let board = Object.assign({}, prevState.board);
+                if (!this.checkGameOver(board)) {
+                    this.handleCollapse(board.moveDown());
+                }
+                return { board };
+            });
+
+            setTimeout(this.processTick, this.state.board.getIntervalSeconds() * 1000);
         }
+    }
+
+    resumeGame = () => {
+        this.paused = false;
+        setTimeout(this.processTick, this.state.board.getIntervalSeconds() * 1000);
     };
 
     initVisibilityChange = () => {
@@ -82,7 +83,7 @@ class App extends Component {
 
     checkGameOver = (board) => {
         if (board.gameOver()) {
-            clearInterval(this.intervalId);
+            this.pauseGame();
             return true;
         }
         return false;
@@ -101,7 +102,7 @@ class App extends Component {
                 action = (board) => board.moveRight();
                 break;
             case 40:
-                action = (board) => board.moveDown();
+                action = (board) => this.handleCollapse(board.moveDown());
                 break;
             default:
                 break;
@@ -115,6 +116,10 @@ class App extends Component {
                 return { board };
             });
         }
+    };
+
+    handleCollapse = (collapsed) => {
+
     };
 
     handleTouchEnd = (event, command) => {
@@ -132,7 +137,7 @@ class App extends Component {
                 action = (board) => board.moveRight();
                 break;
             case "down":
-                action = (board) => board.moveDown();
+                action = (board) => this.handleCollapse(board.moveDown());
                 break;
             default:
                 break;
@@ -205,13 +210,17 @@ class App extends Component {
             );            
         } else {
             return (
-                <div className="game-width control-height margin-auto secondary-color digital"
+                <div className="game-width control-height margin-auto secondary-color"
                      onTouchEnd={this.handleTouchControl}>
                     <div className="preview-grid-container margin-auto control-height center-text">
                         {this.getDivsForPreview()}
                     </div>
-                    <div className="margin-auto control-height center-text">
-                        {this.state.board.getScore()}
+                    <div className="margin-auto control-height">
+                        <span>Score:&nbsp;</span>
+                        <span className="digital">{this.state.board.getScore()}</span>
+                        <br/>
+                        <span>Level:&nbsp;</span>
+                        <span className="digital">{this.state.board.getLevel()}</span>
                     </div>
                 </div>
             );               
