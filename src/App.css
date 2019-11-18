@@ -71,6 +71,12 @@ html, body, #root {
     font-size: 10vh;
 }
 
+.center-link {
+    text-align: center;
+    display: block;
+    font-size: xx-small;
+}
+
 .center-control-container {
     display: flex;
     align-items: center;

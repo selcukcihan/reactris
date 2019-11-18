@@ -1,11 +1,3 @@
-board (rectangular board containing tiles)
-tile (bir kutucuk)
-shape (aynı anda sadece bir shape var, oturunca yenisi gelecek yukarıdan, oturunca tile'a dönüşebilir shape olarak tutmaya gerek yok)
-
-zamanla aşağı kayacak aktif shape
-
-
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

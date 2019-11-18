@@ -110,7 +110,7 @@ class App extends Component {
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyPress);
-        
+
         if (this.intervalId) {
             clearInterval(this.intervalId);
         }
@@ -157,6 +157,8 @@ class App extends Component {
                     </div>
                 </div>
                 {this.renderControlArea()}
+                <a className="center-link" target="_blank"
+                   href="https://github.com/selcukcihan/selcukcihan.github.io">source code</a>
             </div>
         );
     }
