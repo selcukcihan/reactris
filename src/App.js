@@ -197,7 +197,7 @@ class App extends Component {
                 </div>
                 {this.renderControlArea()}
                 <a className="center-link" target="_blank" rel="noopener noreferrer"
-                   href="https://github.com/selcukcihan/selcukcihan.github.io">source code</a>
+                   href="https://github.com/selcukcihan/reactris">source code</a>
             </div>
         );
     }
