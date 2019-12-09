@@ -32,7 +32,6 @@ class App extends Component {
         document.addEventListener(this.visibilityChange, this.handleVisibilityChange, false);
 
         this.processTick();
-        this.resumeGame();
     }
 
     pauseGame = () => {
