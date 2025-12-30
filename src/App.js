@@ -8,6 +8,10 @@ import { WIDTH, HEIGHT } from './game/Constants';
 
 import './App.css';
 
+const Mobile = ({ children }) => {
+    const isMobile = useMediaQuery({ maxWidth: "1224px" });
+    return isMobile ? children : null;
+};
 
 class App extends Component {
     state = {
@@ -173,10 +177,6 @@ class App extends Component {
     };
 
     render() {
-        const Mobile = ({ children }) => {
-            const isMobile = useMediaQuery({ maxWidth: "1224px" });
-            return isMobile ? children : null;
-        };
         return (
             <div className="full-height">
                 <div className="game-height main-grid-container">
